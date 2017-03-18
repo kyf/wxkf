@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/kyf/wxkf/protocol"
 	"net"
 )
 
@@ -40,14 +41,14 @@ func handleConn(conn net.Conn) {
 	tcpconn.SetKeepAlive(true)
 	tcpconn.SetKeepAlivePeriod(time.Minute * 3)
 
-	pro := protocol.initProtocol(PROTOCOL)
+	pro, err := protocol.initProtocol(PROTOCOL)
 	for {
 		data, err := pro.Read()
 		if err != nil {
 			logger.Errorf("protocol read err:%v", err)
 			break
 		}
-		switch data.SendTo {
+		switch data.ToSource {
 		case "wx":
 
 		}
