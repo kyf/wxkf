@@ -19,12 +19,13 @@ func NewProClient(host string) (*ProClient, error) {
 	return &ProClient{conn: conn}
 }
 
-func (this *ProClient) Run() {
+func (this *ProClient) Run(svr *Server) {
 	ticker := time.NewTicker(HeartBeat)
 	defer ticker.Stop()
 	for {
 		select {
 		case <-ticker.C:
+			data := StatusPkg
 			this.conn.Write()
 		}
 	}

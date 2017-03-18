@@ -15,3 +15,7 @@ func monitorShutdown(exit chan int) {
 	}
 	close(ch)
 }
+
+func getOnlineConn(id string) {
+
+}

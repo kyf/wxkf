@@ -13,8 +13,8 @@ var (
 	SchedulerHost = "127.0.0.1:3001"
 	Addr          = ":4001"
 
-	LogPath   = ""
-	LogPrefix = ""
+	LogPath   = "/var/log/wxkf/processor/"
+	LogPrefix = "[wxkf-processor]"
 
 	logger *mlog.Logger
 )

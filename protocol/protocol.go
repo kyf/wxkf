@@ -22,6 +22,7 @@ type Protocol interface {
 	Read() (*DataPkg, error)
 	Write(*DataPkg) error
 	Close()
+	Id() int32
 }
 
 type ProtocolMgr map[string]Protocol
