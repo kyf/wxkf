@@ -55,7 +55,9 @@ func handleConn(conn net.Conn) {
 			logger.Errorf("processor:  decode status pkg err:%v", err)
 			continue
 		}
-
+		pro.IP = statusData.IP
+		pro.Name = statusData.Name
+		pro.ConnNum = statusData.ConnNum
 	}
 
 	tcpconn.Close()

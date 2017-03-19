@@ -2,6 +2,7 @@ package protocol
 
 import (
 	"fmt"
+	"io"
 	"net"
 )
 
@@ -15,6 +16,14 @@ type DataPkg struct {
 	Content    string
 	FromSource string
 	ToSource   string
+}
+
+func (this *DataPkg) Encode(w io.Writer) error {
+
+}
+
+func (this *DataPkg) Decode(r *io.Reader) error {
+
 }
 
 type Protocol interface {
