@@ -57,7 +57,3 @@ func getBestProcessor() *Process {
 
 	return result
 }
-
-func decodeProcessPkg(data []byte, pro *Process) error {
-	return json.Unmarshal(data, pro)
-}

@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/binary"
+	"github.com/kyf/wxkf/server/dtype"
 	"io"
 	"net"
 	"time"
@@ -48,25 +49,11 @@ func handleConn(conn net.Conn) {
 	headbuf := make([]byte, 4)
 	for {
 		tcpconn.SetReadDeadline(time.Now().Add(time.Second * ProcessorHeartBeat))
-		_, err := io.ReadFull(conn, headbuf)
+		var statusData dtype.StatusPkg
+		err := statusData.Decode(tcpconn)
 		if err != nil {
-			logger.Errorf("[scheduler ]tcp read header err:%v", err)
-			break
-		}
-
-		var pkglen int64
-		binary.Read(bytes.NewReader(headbuf), binary.BigEndian, pkglen)
-		pack := make([]byte, pkglen)
-		_, err = io.ReadFull(conn, pack)
-		if err != nil {
-			logger.Errorf("[scheduler ]tcp read data err:%v", err)
-			break
-		}
-
-		err = decodeProcessPkg(pack, pro)
-		if err != nil {
-			logger.Errorf("[scheduler ]tcp decode data err:%v", err)
-			break
+			logger.Errorf("processor:  decode status pkg err:%v", err)
+			continue
 		}
 
 	}

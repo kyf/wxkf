@@ -2,6 +2,8 @@ package main
 
 import (
 	"net"
+
+	"github.com/kyf/wxkf/server/dtype"
 )
 
 type ProClient struct {
@@ -25,8 +27,12 @@ func (this *ProClient) Run(svr *Server) {
 	for {
 		select {
 		case <-ticker.C:
-			data := StatusPkg
-			this.conn.Write()
+			data := dtype.StatusPkg{IP: svr.IP, Name: svr.Name, ConnNum: svr.Count()}
+			err := data.Encode(this.conn)
+			if err != nil {
+				logger.Errorf("proclient:  send status data  err :%v", err)
+			}
+
 		}
 	}
 }
