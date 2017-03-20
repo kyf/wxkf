@@ -3,7 +3,12 @@ package dtype
 import (
 	"encoding/binary"
 	"encoding/json"
+	"errors"
 	"io"
+)
+
+var (
+	ErrNil = errors.New("StatusPkg body is nil")
 )
 
 type StatusPkg struct {
@@ -39,7 +44,7 @@ func (this *StatusPkg) Decode(r io.Reader) error {
 	}
 
 	if bodySize == 0 {
-		return nil
+		return ErrNil
 	}
 
 	body := make([]byte, bodySize)
@@ -48,5 +53,9 @@ func (this *StatusPkg) Decode(r io.Reader) error {
 		return err
 	}
 
+	err = json.Unmarshal(body, this)
+	if err != nil {
+		return err
+	}
 	return nil
 }

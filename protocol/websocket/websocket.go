@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"github.com/gorilla/websocket"
 	"github.com/kyf/wxkf/protocol"
+	"io"
 	"net"
 	"net/http"
 	"sync"
@@ -18,6 +19,7 @@ const (
 type Proto struct {
 	conn websocket.Conn
 	id   int32
+	user []byte
 }
 
 func (this *Proto) init(conn net.Conn) {
@@ -43,6 +45,12 @@ func (this *Proto) init(conn net.Conn) {
 	}
 
 	this.conn = c
+
+	ReadUserTimeout := time.Second * 10
+	this.conn.SetReadDeadline(time.Now().Add(ReadUserTimeout))
+	_, err = io.ReadFull(this.conn, this.user)
+
+	//user auth
 
 	this.conn.SetPingHandler(this.PingHandler)
 	go this.HeartBeat()
@@ -103,6 +111,10 @@ func (this *Proto) Id() int32 {
 	return this.id
 }
 
+func (this *Proto) User() []byte {
+	return this.user
+}
+
 func (this *Proto) Close() {
 	this.conn.Close()
 }
@@ -110,7 +122,7 @@ func (this *Proto) Close() {
 var id int32
 
 func init() {
-	p := &Proto{id: atomic.AddInt32(id, 1)}
+	p := &Proto{id: atomic.AddInt32(id, 1), user: make([]byte, 24)}
 
 	protocol.Register("websocket", p)
 }
